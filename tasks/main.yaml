@@ -1,0 +1,39 @@
+---
+- name: "Admin User | Create wheel group"
+  ansible.builtin.group:
+    name: "wheel"
+    state: present
+  when: ansible_os_family == 'Debian'
+
+- name: "Admin User | Create admin user {{ admin_user_username }}"
+  ansible.builtin.user:
+    name: "{{ admin_user_username }}"
+    shell: "/bin/bash"
+    groups: [sudo, adm, wheel]
+    append: true
+  when: ansible_os_family == 'Debian'
+
+- name: "Admin User | Create admin user {{ admin_user_username }}"
+  ansible.builtin.user:
+    name: "{{ admin_user_username }}"
+    shell: "/bin/bash"
+    groups: [wheel]
+    append: true
+  when: ansible_os_family == 'RedHat'
+
+- name: "Admin User | Set authorized keys for {{ admin_user_username }}"
+  ansible.posix.authorized_key:
+    user: "{{ admin_user_username }}"
+    state: present
+    key: "{{ admin_user_ssh_pubkey }}"
+    exclusive: true
+  when: not ansible_check_mode
+
+- name: "Admin User | Create admin sudoers file"
+  ansible.builtin.template:
+    src: "10-wheel-sudoers.j2"
+    dest: "/etc/sudoers.d/10-wheel"
+    mode: "0440"
+    owner: root
+    group: root
+    validate: '/usr/sbin/visudo -cf %s'

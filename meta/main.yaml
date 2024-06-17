@@ -1,0 +1,27 @@
+---
+galaxy_info:
+  role_name: admin-user
+  author: "Rubens Franco"
+  description: "Create a linux admin user"
+  license: "GNU GENERAL PUBLIC LICENSE v2"
+  min_ansible_version: "2.9"
+  platforms:
+    - name: Ubuntu
+      versions:
+        - "jammy"
+        - "focal"
+        - "bionic"
+    - name: Debian
+      versions:
+        - "bullseye"
+        - "buster"
+    - name: EL
+      versions:
+        - "9"
+        - "8"
+  galaxy_tags:
+    - unix-user
+    - linux
+    - admin
+    - users
+dependencies: []
